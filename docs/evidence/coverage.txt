@@ -1,0 +1,37 @@
+
+> certificacao-testes@1.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v2.1.9 /home/erico/Documents/suficiencia/certificacao-testes
+      Coverage enabled with istanbul
+
+ ✓ tests/password-policy.test.ts (16 tests) 48ms
+ ✓ tests/auth-service.test.ts (12 tests) 62ms
+ ✓ tests/infrastructure.test.ts (3 tests) 77ms
+ ✓ tests/integration.test.ts (3 tests) 644ms
+
+ Test Files  4 passed (4)
+      Tests  34 passed (34)
+   Start at  21:33:15
+   Duration  2.05s (transform 960ms, setup 0ms, collect 1.91s, tests 830ms, environment 1ms, prepare 577ms)
+
+ % Coverage report from istanbul
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   98.94 |    95.45 |     100 |   98.94 |                   
+ auth-service.ts   |     100 |      100 |     100 |     100 |                   
+ config.ts         |     100 |      100 |     100 |     100 |                   
+ email.ts          |     100 |      100 |     100 |     100 |                   
+ ...-repository.ts |     100 |       50 |     100 |     100 | 13                
+ ...word-policy.ts |     100 |      100 |     100 |     100 |                   
+ ...word-hasher.ts |   95.45 |       90 |     100 |   95.45 | 44                
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 98.94% ( 94/95 )
+Branches     : 95.45% ( 42/44 )
+Functions    : 100% ( 20/20 )
+Lines        : 98.94% ( 94/95 )
+================================================================================

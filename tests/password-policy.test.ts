@@ -87,5 +87,10 @@ describe('validatePassword', () => {
       const result = validatePassword('SecurePass1!', 'user@example.com');
       expect(result).not.toContain('CONTAINS_EMAIL_LOCAL_PART');
     });
+
+    it('CT-12b: handles email without @ symbol gracefully (RN03 edge case)', () => {
+      const result = validatePassword('SecurePass1!', 'rawusername');
+      expect(result).not.toContain('CONTAINS_EMAIL_LOCAL_PART');
+    });
   });
 });
