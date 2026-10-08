@@ -11,8 +11,14 @@ export type PasswordViolation =
 
 /** Returns all violations found; an empty array means the password is valid. */
 export function validatePassword(
-  _password: string,
+  password: string,
   _email: string,
 ): PasswordViolation[] {
-  return [];
+  const violations: PasswordViolation[] = [];
+
+  if (password.length < 8) {
+    violations.push('TOO_SHORT');
+  }
+
+  return violations;
 }
