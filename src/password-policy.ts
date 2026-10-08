@@ -20,6 +20,13 @@ const COMPLEXITY_RULES: ReadonlyArray<{
   { violation: 'MISSING_SPECIAL',   pattern: /[^A-Za-z0-9]/ },
 ];
 
+/** Extracts and normalizes (lowercased) local part of an email address. */
+function extractLocalPart(email: string): string {
+  const atIndex = email.indexOf('@');
+  const rawLocalPart = atIndex !== -1 ? email.slice(0, atIndex) : email;
+  return rawLocalPart.trim().toLowerCase();
+}
+
 /** Returns all violations found; an empty array means the password is valid. */
 export function validatePassword(
   password: string,
@@ -41,10 +48,9 @@ export function validatePassword(
     }
   }
 
-  // RN03 — email local part check
-  const atIndex = email.indexOf('@');
-  const localPart = atIndex !== -1 ? email.slice(0, atIndex) : email;
-  if (localPart.length > 0 && password.toLowerCase().includes(localPart.toLowerCase())) {
+  // RN03 — email local part check (case-insensitive)
+  const localPart = extractLocalPart(email);
+  if (localPart.length > 0 && password.toLowerCase().includes(localPart)) {
     violations.push('CONTAINS_EMAIL_LOCAL_PART');
   }
 
