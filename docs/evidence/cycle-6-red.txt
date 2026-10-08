@@ -1,0 +1,94 @@
+
+ RUN  v2.1.9 /home/erico/Documents/suficiencia/certificacao-testes
+
+ ✓ tests/password-policy.test.ts (15 tests) 17ms
+ ❯ tests/auth-service.test.ts (5 tests | 3 failed) 38ms
+   × AuthService — register > RN04 & RN05 — email uniqueness and secure storage > CT-15: rejects registration when email is already registered (RN04) 18ms
+     → expected { ok: true, userId: 'naive-id' } to deeply equal { ok: false, …(1) }
+   × AuthService — register > RN04 & RN05 — email uniqueness and secure storage > CT-16: successfully registers user, storing only password hash (RN04, RN05) 7ms
+     → expected "spy" to be called with arguments: [ 'StrongPass1!' ]
+
+Received: 
+
+
+
+Number of calls: 0
+
+   × AuthService — register > RN04 & RN05 — email uniqueness and secure storage > CT-17: uses trimmed and lowercased email for uniqueness check and persistence (RN04) 2ms
+     → expected "spy" to be called with arguments: [ 'newuser@domain.com' ]
+
+Received: 
+
+
+
+Number of calls: 0
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/auth-service.test.ts > AuthService — register > RN04 & RN05 — email uniqueness and secure storage > CT-15: rejects registration when email is already registered (RN04)
+AssertionError: expected { ok: true, userId: 'naive-id' } to deeply equal { ok: false, …(1) }
+
+- Expected
++ Received
+
+  Object {
+-   "ok": false,
+-   "reason": "EMAIL_ALREADY_REGISTERED",
++   "ok": true,
++   "userId": "naive-id",
+  }
+
+ ❯ tests/auth-service.test.ts:65:22
+     63|       const result = await authService.register('user@example.com', 'S…
+     64| 
+     65|       expect(result).toEqual({
+       |                      ^
+     66|         ok: false,
+     67|         reason: 'EMAIL_ALREADY_REGISTERED',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/auth-service.test.ts > AuthService — register > RN04 & RN05 — email uniqueness and secure storage > CT-16: successfully registers user, storing only password hash (RN04, RN05)
+AssertionError: expected "spy" to be called with arguments: [ 'StrongPass1!' ]
+
+Received: 
+
+
+
+Number of calls: 0
+
+ ❯ tests/auth-service.test.ts:82:35
+     80|       }
+     81| 
+     82|       expect(passwordHasher.hash).toHaveBeenCalledWith(plainPassword);
+       |                                   ^
+     83|       expect(userRepository.save).toHaveBeenCalledWith(
+     84|         expect.objectContaining({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/auth-service.test.ts > AuthService — register > RN04 & RN05 — email uniqueness and secure storage > CT-17: uses trimmed and lowercased email for uniqueness check and persistence (RN04)
+AssertionError: expected "spy" to be called with arguments: [ 'newuser@domain.com' ]
+
+Received: 
+
+
+
+Number of calls: 0
+
+ ❯ tests/auth-service.test.ts:101:42
+     99|       await authService.register('   NewUser@Domain.COM  ', 'StrongPas…
+    100| 
+    101|       expect(userRepository.findByEmail).toHaveBeenCalledWith('newuser…
+       |                                          ^
+    102|       expect(userRepository.save).toHaveBeenCalledWith(
+    103|         expect.objectContaining({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  3 failed | 17 passed (20)
+   Start at  21:27:10
+   Duration  594ms (transform 140ms, setup 0ms, collect 189ms, tests 55ms, environment 1ms, prepare 237ms)
+

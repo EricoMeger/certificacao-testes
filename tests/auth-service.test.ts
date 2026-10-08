@@ -49,4 +49,61 @@ describe('AuthService — register', () => {
       expect(userRepository.save).not.toHaveBeenCalled();
     });
   });
+
+  describe('RN04 & RN05 — email uniqueness and secure storage', () => {
+    it('CT-15: rejects registration when email is already registered (RN04)', async () => {
+      vi.mocked(userRepository.findByEmail).mockResolvedValueOnce({
+        id: 'existing-id',
+        email: 'user@example.com',
+        passwordHash: 'existing_hash',
+        failedAttempts: 0,
+        lockedUntil: null,
+      });
+
+      const result = await authService.register('user@example.com', 'StrongPass1!');
+
+      expect(result).toEqual({
+        ok: false,
+        reason: 'EMAIL_ALREADY_REGISTERED',
+      });
+      expect(passwordHasher.hash).not.toHaveBeenCalled();
+      expect(userRepository.save).not.toHaveBeenCalled();
+    });
+
+    it('CT-16: successfully registers user, storing only password hash (RN04, RN05)', async () => {
+      const plainPassword = 'StrongPass1!';
+      const result = await authService.register('user@example.com', plainPassword);
+
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.userId).toBeDefined();
+      }
+
+      expect(passwordHasher.hash).toHaveBeenCalledWith(plainPassword);
+      expect(userRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: expect.any(String),
+          email: 'user@example.com',
+          passwordHash: 'hashed_pw',
+          failedAttempts: 0,
+          lockedUntil: null,
+        }),
+      );
+
+      // Verify plaintext password is never passed to repository
+      const savedUser = vi.mocked(userRepository.save).mock.calls[0][0];
+      expect(JSON.stringify(savedUser)).not.toContain(plainPassword);
+    });
+
+    it('CT-17: uses trimmed and lowercased email for uniqueness check and persistence (RN04)', async () => {
+      await authService.register('   NewUser@Domain.COM  ', 'StrongPass1!');
+
+      expect(userRepository.findByEmail).toHaveBeenCalledWith('newuser@domain.com');
+      expect(userRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: 'newuser@domain.com',
+        }),
+      );
+    });
+  });
 });
