@@ -6,32 +6,32 @@
  RUN  v2.1.9 /home/erico/Documents/suficiencia/certificacao-testes
       Coverage enabled with istanbul
 
- ✓ tests/password-policy.test.ts (16 tests) 48ms
- ✓ tests/auth-service.test.ts (12 tests) 62ms
- ✓ tests/infrastructure.test.ts (3 tests) 77ms
- ✓ tests/integration.test.ts (3 tests) 644ms
+ ✓ tests/password-policy.test.ts (16 tests) 16ms
+ ✓ tests/auth-service.test.ts (12 tests) 35ms
+ ✓ tests/integration.test.ts (3 tests) 20ms
+ ✓ tests/infrastructure.test.ts (4 tests) 9ms
 
  Test Files  4 passed (4)
-      Tests  34 passed (34)
-   Start at  21:33:15
-   Duration  2.05s (transform 960ms, setup 0ms, collect 1.91s, tests 830ms, environment 1ms, prepare 577ms)
+      Tests  35 passed (35)
+   Start at  21:48:10
+   Duration  1.56s (transform 849ms, setup 0ms, collect 1.45s, tests 81ms, environment 1ms, prepare 492ms)
 
  % Coverage report from istanbul
 -------------------|---------|----------|---------|---------|-------------------
 File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 -------------------|---------|----------|---------|---------|-------------------
-All files          |   98.94 |    95.45 |     100 |   98.94 |                   
+All files          |     100 |    94.28 |     100 |     100 |                   
  auth-service.ts   |     100 |      100 |     100 |     100 |                   
  config.ts         |     100 |      100 |     100 |     100 |                   
  email.ts          |     100 |      100 |     100 |     100 |                   
  ...-repository.ts |     100 |       50 |     100 |     100 | 13                
  ...word-policy.ts |     100 |      100 |     100 |     100 |                   
- ...word-hasher.ts |   95.45 |       90 |     100 |   95.45 | 44                
+ ...word-hasher.ts |     100 |        0 |     100 |     100 | 10                
 -------------------|---------|----------|---------|---------|-------------------
 
 =============================== Coverage summary ===============================
-Statements   : 98.94% ( 94/95 )
-Branches     : 95.45% ( 42/44 )
-Functions    : 100% ( 20/20 )
-Lines        : 98.94% ( 94/95 )
+Statements   : 100% ( 78/78 )
+Branches     : 94.28% ( 33/35 )
+Functions    : 100% ( 18/18 )
+Lines        : 100% ( 78/78 )
 ================================================================================

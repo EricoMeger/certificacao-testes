@@ -1,51 +1,25 @@
-import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
+import bcrypt from 'bcrypt';
 import { PasswordHasher } from './ports.js';
 
-const KEY_LENGTH = 64;
-const SALT_LENGTH = 16;
+const DEFAULT_SALT_ROUNDS = 10;
 
 /**
- * PasswordHasher implementation using Node's native crypto.scrypt.
- * Stores hash as `<salt_hex>:<derived_key_hex>`.
+ * PasswordHasher implementation using the industry-standard bcrypt library.
  */
-export class ScryptPasswordHasher implements PasswordHasher {
+export class BcryptPasswordHasher implements PasswordHasher {
+  constructor(private readonly rounds: number = DEFAULT_SALT_ROUNDS) {}
+
   async hash(plain: string): Promise<string> {
-    const salt = randomBytes(SALT_LENGTH);
-    const derivedKey = await this.deriveKey(plain, salt);
-    return `${salt.toString('hex')}:${derivedKey.toString('hex')}`;
+    return bcrypt.hash(plain, this.rounds);
   }
 
   async verify(plain: string, hash: string): Promise<boolean> {
-    const parts = hash.split(':');
-    if (parts.length !== 2) {
-      return false;
-    }
-
-    const [saltHex, keyHex] = parts;
-    if (!saltHex || !keyHex) {
-      return false;
-    }
-
-    const salt = Buffer.from(saltHex, 'hex');
-    const expectedKey = Buffer.from(keyHex, 'hex');
-    const derivedKey = await this.deriveKey(plain, salt);
-
-    if (expectedKey.length !== derivedKey.length) {
-      return false;
-    }
-
-    return timingSafeEqual(expectedKey, derivedKey);
-  }
-
-  private deriveKey(plain: string, salt: Buffer): Promise<Buffer> {
-    return new Promise((resolve, reject) => {
-      scrypt(plain, salt, KEY_LENGTH, (err, derivedKey) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(derivedKey);
-        }
-      });
-    });
+    return bcrypt.compare(plain, hash);
   }
 }
+
+/**
+ * Alias maintaining compatibility with the existing port references as both type and value.
+ */
+export type ScryptPasswordHasher = BcryptPasswordHasher;
+export const ScryptPasswordHasher = BcryptPasswordHasher;

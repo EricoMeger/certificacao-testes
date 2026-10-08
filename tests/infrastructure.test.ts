@@ -37,20 +37,22 @@ describe('Infrastructure — InMemoryUserRepository', () => {
   });
 });
 
-describe('Infrastructure — ScryptPasswordHasher', () => {
+describe('Infrastructure — PasswordHasher (bcrypt)', () => {
+  it('hashes and verifies plain password successfully', async () => {
+    const hasher = new ScryptPasswordHasher(4);
+    const hash = await hasher.hash('Password123!');
+
+    expect(hash).toMatch(/^\$2[aby]\$\d{2}\$/);
+    expect(await hasher.verify('Password123!', hash)).toBe(true);
+    expect(await hasher.verify('WrongPassword!', hash)).toBe(false);
+  });
+
   it('returns false when verifying malformed hash strings', async () => {
-    const hasher = new ScryptPasswordHasher();
+    const hasher = new ScryptPasswordHasher(4);
 
-    // No colon delimiter
     expect(await hasher.verify('Password123!', 'invalidhash')).toBe(false);
-
-    // Empty parts
-    expect(await hasher.verify('Password123!', ':')).toBe(false);
-    expect(await hasher.verify('Password123!', 'part1:part2:part3')).toBe(false);
-
-    // Different key lengths
-    const validSalt = '0123456789abcdef0123456789abcdef';
-    const shortKey = 'abcd';
-    expect(await hasher.verify('Password123!', `${validSalt}:${shortKey}`)).toBe(false);
+    expect(await hasher.verify('Password123!', '')).toBe(false);
+    expect(await hasher.verify('Password123!', '$2b$10$malformedhashvalue')).toBe(false);
   });
 });
+

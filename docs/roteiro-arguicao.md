@@ -134,3 +134,4 @@
 > - `INVALID_CREDENTIALS` $\rightarrow$ HTTP 401 Unauthorized;
 > - `ACCOUNT_LOCKED` $\rightarrow$ HTTP 429 Too Many Requests (ou 403 Forbidden com cabeçalho `Retry-After: 900`).
 > A lógica de domínio do `AuthService` e as regras de senha continuariam 100% inalteradas, pois o domínio é puro e desacoplado da camada de transporte."*
+

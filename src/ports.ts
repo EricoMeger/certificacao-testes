@@ -19,3 +19,4 @@ export interface PasswordHasher {
 export interface Clock {
   now(): Date;
 }
+

@@ -13,7 +13,7 @@ describe('Integration — AuthService with real InMemoryUserRepository and Scryp
 
   beforeEach(() => {
     repository = new InMemoryUserRepository();
-    hasher = new ScryptPasswordHasher();
+    hasher = new ScryptPasswordHasher(4);
     currentTime = new Date('2026-10-08T12:00:00.000Z');
     clock = {
       now: () => new Date(currentTime.getTime()),
@@ -33,7 +33,7 @@ describe('Integration — AuthService with real InMemoryUserRepository and Scryp
     // Verify stored user in repository
     const storedUser = await repository.findByEmail(email);
     expect(storedUser).not.toBeNull();
-    expect(storedUser?.passwordHash).toMatch(/^[0-9a-f]{32}:[0-9a-f]{128}$/);
+    expect(storedUser?.passwordHash).toMatch(/^\$2[aby]\$\d{2}\$/);
     expect(storedUser?.passwordHash).not.toContain(password);
 
     // Login with correct password
@@ -89,3 +89,4 @@ describe('Integration — AuthService with real InMemoryUserRepository and Scryp
     expect(unlockedAttempt.ok).toBe(true);
   });
 });
+
