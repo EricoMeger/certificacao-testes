@@ -1,5 +1,3 @@
-// Skeleton — will be implemented via TDD.
-
 import { MIN_LENGTH, MAX_LENGTH } from './config.js';
 
 export type PasswordViolation =
@@ -11,6 +9,17 @@ export type PasswordViolation =
   | 'MISSING_SPECIAL'
   | 'CONTAINS_EMAIL_LOCAL_PART';
 
+/** Declarative list of character-class rules (RN02). */
+const COMPLEXITY_RULES: ReadonlyArray<{
+  violation: PasswordViolation;
+  pattern: RegExp;
+}> = [
+  { violation: 'MISSING_UPPERCASE', pattern: /[A-Z]/ },
+  { violation: 'MISSING_LOWERCASE', pattern: /[a-z]/ },
+  { violation: 'MISSING_DIGIT',     pattern: /[0-9]/ },
+  { violation: 'MISSING_SPECIAL',   pattern: /[^A-Za-z0-9]/ },
+];
+
 /** Returns all violations found; an empty array means the password is valid. */
 export function validatePassword(
   password: string,
@@ -18,23 +27,18 @@ export function validatePassword(
 ): PasswordViolation[] {
   const violations: PasswordViolation[] = [];
 
+  // RN01 — length check
   if (password.length < MIN_LENGTH) {
     violations.push('TOO_SHORT');
   } else if (password.length > MAX_LENGTH) {
     violations.push('TOO_LONG');
   }
 
-  if (!/[A-Z]/.test(password)) {
-    violations.push('MISSING_UPPERCASE');
-  }
-  if (!/[a-z]/.test(password)) {
-    violations.push('MISSING_LOWERCASE');
-  }
-  if (!/[0-9]/.test(password)) {
-    violations.push('MISSING_DIGIT');
-  }
-  if (!/[^A-Za-z0-9]/.test(password)) {
-    violations.push('MISSING_SPECIAL');
+  // RN02 — complexity checks
+  for (const { violation, pattern } of COMPLEXITY_RULES) {
+    if (!pattern.test(password)) {
+      violations.push(violation);
+    }
   }
 
   return violations;
