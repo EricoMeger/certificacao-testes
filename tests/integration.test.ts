@@ -1,19 +1,19 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { AuthService } from '../src/auth-service.js';
-import { InMemoryUserRepository } from '../src/in-memory-user-repository.js';
-import { ScryptPasswordHasher } from '../src/scrypt-password-hasher.js';
-import { Clock } from '../src/ports.js';
+import { AuthService } from '../src/domain/auth-service.js';
+import { InMemoryUserRepository } from '../src/infrastructure/persistence/in-memory-user-repository.js';
+import { BcryptPasswordHasher } from '../src/infrastructure/security/bcrypt-password-hasher.js';
+import { Clock } from '../src/domain/ports.js';
 
-describe('Integration — AuthService with real InMemoryUserRepository and ScryptPasswordHasher', () => {
+describe('Integration — AuthService with real InMemoryUserRepository and BcryptPasswordHasher', () => {
   let repository: InMemoryUserRepository;
-  let hasher: ScryptPasswordHasher;
+  let hasher: BcryptPasswordHasher;
   let clock: Clock;
   let currentTime: Date;
   let authService: AuthService;
 
   beforeEach(() => {
     repository = new InMemoryUserRepository();
-    hasher = new ScryptPasswordHasher(4);
+    hasher = new BcryptPasswordHasher(4);
     currentTime = new Date('2026-10-08T12:00:00.000Z');
     clock = {
       now: () => new Date(currentTime.getTime()),

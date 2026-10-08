@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { InMemoryUserRepository } from '../src/in-memory-user-repository.js';
-import { ScryptPasswordHasher } from '../src/scrypt-password-hasher.js';
-import { User } from '../src/ports.js';
+import { InMemoryUserRepository } from '../src/infrastructure/persistence/in-memory-user-repository.js';
+import { BcryptPasswordHasher } from '../src/infrastructure/security/bcrypt-password-hasher.js';
+import { User } from '../src/domain/ports.js';
 
 describe('Infrastructure — InMemoryUserRepository', () => {
   it('saves and finds user by normalized email', async () => {
@@ -39,7 +39,7 @@ describe('Infrastructure — InMemoryUserRepository', () => {
 
 describe('Infrastructure — PasswordHasher (bcrypt)', () => {
   it('hashes and verifies plain password successfully', async () => {
-    const hasher = new ScryptPasswordHasher(4);
+    const hasher = new BcryptPasswordHasher(4);
     const hash = await hasher.hash('Password123!');
 
     expect(hash).toMatch(/^\$2[aby]\$\d{2}\$/);
@@ -48,7 +48,7 @@ describe('Infrastructure — PasswordHasher (bcrypt)', () => {
   });
 
   it('returns false when verifying malformed hash strings', async () => {
-    const hasher = new ScryptPasswordHasher(4);
+    const hasher = new BcryptPasswordHasher(4);
 
     expect(await hasher.verify('Password123!', 'invalidhash')).toBe(false);
     expect(await hasher.verify('Password123!', '')).toBe(false);

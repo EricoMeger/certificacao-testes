@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AuthService } from '../src/auth-service.js';
-import { UserRepository, PasswordHasher, Clock } from '../src/ports.js';
+import { AuthService } from '../src/domain/auth-service.js';
+import { UserRepository, PasswordHasher, Clock } from '../src/domain/ports.js';
 
 describe('AuthService — register', () => {
   let userRepository: UserRepository;

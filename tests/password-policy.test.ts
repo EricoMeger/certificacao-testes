@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validatePassword } from '../src/password-policy.js';
+import { validatePassword } from '../src/domain/password-policy.js';
 
 describe('validatePassword', () => {
   // Valid baseline password used when testing rules other than length.
