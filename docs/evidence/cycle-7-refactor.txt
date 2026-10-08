@@ -1,0 +1,11 @@
+
+ RUN  v2.1.9 /home/erico/Documents/suficiencia/certificacao-testes
+
+ ✓ tests/password-policy.test.ts (15 tests) 15ms
+ ✓ tests/auth-service.test.ts (8 tests) 19ms
+
+ Test Files  2 passed (2)
+      Tests  23 passed (23)
+   Start at  21:29:52
+   Duration  588ms (transform 134ms, setup 0ms, collect 202ms, tests 34ms, environment 1ms, prepare 256ms)
+

@@ -70,10 +70,14 @@ export class AuthService {
       return { ok: false, reason: 'INVALID_CREDENTIALS' };
     }
 
+    await this.resetLoginState(user);
+
+    return { ok: true, userId: user.id };
+  }
+
+  private async resetLoginState(user: User): Promise<void> {
     user.failedAttempts = 0;
     user.lockedUntil = null;
     await this.userRepository.save(user);
-
-    return { ok: true, userId: user.id };
   }
 }
