@@ -22,5 +22,9 @@ export function validatePassword(
     violations.push('TOO_SHORT');
   }
 
+  if (password.length > 64) {
+    violations.push('TOO_LONG');
+  }
+
   return violations;
 }
