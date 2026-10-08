@@ -42,4 +42,33 @@ describe('validatePassword', () => {
       expect(result).toContain('TOO_LONG');
     });
   });
+
+  describe('RN02 — password complexity (uppercase, lowercase, digit, special)', () => {
+    it.each([
+      { password: 'abcd1!ef',   missing: 'MISSING_UPPERCASE' as const,  desc: 'no uppercase'   },
+      { password: 'ABCD1!EF',   missing: 'MISSING_LOWERCASE' as const,  desc: 'no lowercase'   },
+      { password: 'Abcdefg!',   missing: 'MISSING_DIGIT'     as const,  desc: 'no digit'       },
+      { password: 'Abcdefg1',   missing: 'MISSING_SPECIAL'   as const,  desc: 'no special char' },
+    ])('CT-07/$missing: rejects password with $desc (RN02)', ({ password, missing }) => {
+      const result = validatePassword(password, VALID_EMAIL);
+      expect(result).toContain(missing);
+    });
+
+    it('CT-08: accepts password that meets all complexity rules (RN02)', () => {
+      const result = validatePassword('Abcdef1!', VALID_EMAIL);
+      expect(result).not.toContain('MISSING_UPPERCASE');
+      expect(result).not.toContain('MISSING_LOWERCASE');
+      expect(result).not.toContain('MISSING_DIGIT');
+      expect(result).not.toContain('MISSING_SPECIAL');
+    });
+
+    it('CT-09: reports all missing categories at once (RN02)', () => {
+      // 8 lowercase letters — missing uppercase, digit, and special
+      const result = validatePassword('abcdefgh', VALID_EMAIL);
+      expect(result).toContain('MISSING_UPPERCASE');
+      expect(result).toContain('MISSING_DIGIT');
+      expect(result).toContain('MISSING_SPECIAL');
+      expect(result).not.toContain('MISSING_LOWERCASE');
+    });
+  });
 });

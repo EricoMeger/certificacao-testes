@@ -1,0 +1,82 @@
+
+ RUN  v2.1.9 /home/erico/Documents/suficiencia/certificacao-testes
+
+ ❯ tests/password-policy.test.ts (12 tests | 5 failed) 16ms
+   × validatePassword > RN02 — password complexity (uppercase, lowercase, digit, special) > CT-07/'MISSING_UPPERCASE': rejects password with 'no uppercase' (RN02) 6ms
+     → expected [] to include 'MISSING_UPPERCASE'
+   × validatePassword > RN02 — password complexity (uppercase, lowercase, digit, special) > CT-07/'MISSING_LOWERCASE': rejects password with 'no lowercase' (RN02) 1ms
+     → expected [] to include 'MISSING_LOWERCASE'
+   × validatePassword > RN02 — password complexity (uppercase, lowercase, digit, special) > CT-07/'MISSING_DIGIT': rejects password with 'no digit' (RN02) 1ms
+     → expected [] to include 'MISSING_DIGIT'
+   × validatePassword > RN02 — password complexity (uppercase, lowercase, digit, special) > CT-07/'MISSING_SPECIAL': rejects password with 'no special char' (RN02) 1ms
+     → expected [] to include 'MISSING_SPECIAL'
+   × validatePassword > RN02 — password complexity (uppercase, lowercase, digit, special) > CT-09: reports all missing categories at once (RN02) 1ms
+     → expected [] to include 'MISSING_UPPERCASE'
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/password-policy.test.ts > validatePassword > RN02 — password complexity (uppercase, lowercase, digit, special) > CT-07/'MISSING_UPPERCASE': rejects password with 'no uppercase' (RN02)
+AssertionError: expected [] to include 'MISSING_UPPERCASE'
+ ❯ tests/password-policy.test.ts:54:22
+     52|     ])('CT-07/$missing: rejects password with $desc (RN02)', ({ passwo…
+     53|       const result = validatePassword(password, VALID_EMAIL);
+     54|       expect(result).toContain(missing);
+       |                      ^
+     55|     });
+     56| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/password-policy.test.ts > validatePassword > RN02 — password complexity (uppercase, lowercase, digit, special) > CT-07/'MISSING_LOWERCASE': rejects password with 'no lowercase' (RN02)
+AssertionError: expected [] to include 'MISSING_LOWERCASE'
+ ❯ tests/password-policy.test.ts:54:22
+     52|     ])('CT-07/$missing: rejects password with $desc (RN02)', ({ passwo…
+     53|       const result = validatePassword(password, VALID_EMAIL);
+     54|       expect(result).toContain(missing);
+       |                      ^
+     55|     });
+     56| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/password-policy.test.ts > validatePassword > RN02 — password complexity (uppercase, lowercase, digit, special) > CT-07/'MISSING_DIGIT': rejects password with 'no digit' (RN02)
+AssertionError: expected [] to include 'MISSING_DIGIT'
+ ❯ tests/password-policy.test.ts:54:22
+     52|     ])('CT-07/$missing: rejects password with $desc (RN02)', ({ passwo…
+     53|       const result = validatePassword(password, VALID_EMAIL);
+     54|       expect(result).toContain(missing);
+       |                      ^
+     55|     });
+     56| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/password-policy.test.ts > validatePassword > RN02 — password complexity (uppercase, lowercase, digit, special) > CT-07/'MISSING_SPECIAL': rejects password with 'no special char' (RN02)
+AssertionError: expected [] to include 'MISSING_SPECIAL'
+ ❯ tests/password-policy.test.ts:54:22
+     52|     ])('CT-07/$missing: rejects password with $desc (RN02)', ({ passwo…
+     53|       const result = validatePassword(password, VALID_EMAIL);
+     54|       expect(result).toContain(missing);
+       |                      ^
+     55|     });
+     56| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/password-policy.test.ts > validatePassword > RN02 — password complexity (uppercase, lowercase, digit, special) > CT-09: reports all missing categories at once (RN02)
+AssertionError: expected [] to include 'MISSING_UPPERCASE'
+ ❯ tests/password-policy.test.ts:68:22
+     66|       // 8 lowercase letters — missing uppercase, digit, and special
+     67|       const result = validatePassword('abcdefgh', VALID_EMAIL);
+     68|       expect(result).toContain('MISSING_UPPERCASE');
+       |                      ^
+     69|       expect(result).toContain('MISSING_DIGIT');
+     70|       expect(result).toContain('MISSING_SPECIAL');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 7 passed (12)
+   Start at  21:12:04
+   Duration  449ms (transform 62ms, setup 0ms, collect 56ms, tests 16ms, environment 0ms, prepare 81ms)
+
