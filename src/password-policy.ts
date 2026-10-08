@@ -1,5 +1,7 @@
 // Skeleton — will be implemented via TDD.
 
+import { MIN_LENGTH } from './config.js';
+
 export type PasswordViolation =
   | 'TOO_SHORT'
   | 'TOO_LONG'
@@ -16,7 +18,7 @@ export function validatePassword(
 ): PasswordViolation[] {
   const violations: PasswordViolation[] = [];
 
-  if (password.length < 8) {
+  if (password.length < MIN_LENGTH) {
     violations.push('TOO_SHORT');
   }
 
