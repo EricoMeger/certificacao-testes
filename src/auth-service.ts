@@ -1,5 +1,6 @@
+import { randomUUID } from 'node:crypto';
 import { PasswordViolation, validatePassword } from './password-policy.js';
-import { UserRepository, PasswordHasher, Clock } from './ports.js';
+import { User, UserRepository, PasswordHasher, Clock } from './ports.js';
 import { isValidEmail, normalizeEmail } from './email.js';
 
 export type RegisterResult =
@@ -33,7 +34,24 @@ export class AuthService {
       return { ok: false, reason: 'WEAK_PASSWORD', violations };
     }
 
-    return { ok: true, userId: 'naive-id' };
+    const existing = await this.userRepository.findByEmail(normalizedEmail);
+    if (existing !== null) {
+      return { ok: false, reason: 'EMAIL_ALREADY_REGISTERED' };
+    }
+
+    const passwordHash = await this.passwordHasher.hash(password);
+    const userId = randomUUID();
+    const user: User = {
+      id: userId,
+      email: normalizedEmail,
+      passwordHash,
+      failedAttempts: 0,
+      lockedUntil: null,
+    };
+
+    await this.userRepository.save(user);
+
+    return { ok: true, userId };
   }
 
   async login(_email: string, _password: string): Promise<LoginResult> {
