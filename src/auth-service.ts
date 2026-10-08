@@ -66,27 +66,40 @@ export class AuthService {
 
     const now = this.clock.now();
 
-    if (user.lockedUntil !== null) {
-      if (now.getTime() < user.lockedUntil.getTime()) {
-        return { ok: false, reason: 'ACCOUNT_LOCKED' };
-      }
-      user.lockedUntil = null;
-      user.failedAttempts = 0;
+    if (this.isAccountLocked(user, now)) {
+      return { ok: false, reason: 'ACCOUNT_LOCKED' };
     }
+
+    this.handleExpiredLock(user, now);
 
     const isValid = await this.passwordHasher.verify(password, user.passwordHash);
     if (!isValid) {
-      user.failedAttempts += 1;
-      if (user.failedAttempts >= MAX_FAILED_ATTEMPTS) {
-        user.lockedUntil = new Date(now.getTime() + LOCK_MINUTES * 60 * 1000);
-      }
-      await this.userRepository.save(user);
+      await this.handleFailedLogin(user, now);
       return { ok: false, reason: 'INVALID_CREDENTIALS' };
     }
 
     await this.resetLoginState(user);
 
     return { ok: true, userId: user.id };
+  }
+
+  private isAccountLocked(user: User, now: Date): boolean {
+    return user.lockedUntil !== null && now.getTime() < user.lockedUntil.getTime();
+  }
+
+  private handleExpiredLock(user: User, now: Date): void {
+    if (user.lockedUntil !== null && now.getTime() >= user.lockedUntil.getTime()) {
+      user.lockedUntil = null;
+      user.failedAttempts = 0;
+    }
+  }
+
+  private async handleFailedLogin(user: User, now: Date): Promise<void> {
+    user.failedAttempts += 1;
+    if (user.failedAttempts >= MAX_FAILED_ATTEMPTS) {
+      user.lockedUntil = new Date(now.getTime() + LOCK_MINUTES * 60 * 1000);
+    }
+    await this.userRepository.save(user);
   }
 
   private async resetLoginState(user: User): Promise<void> {
