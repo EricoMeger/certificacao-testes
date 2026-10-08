@@ -56,7 +56,24 @@ export class AuthService {
     };
   }
 
-  async login(_email: string, _password: string): Promise<LoginResult> {
-    return { ok: true, userId: 'naive-id' };
+  async login(email: string, password: string): Promise<LoginResult> {
+    const normalizedEmail = normalizeEmail(email);
+    const user = await this.userRepository.findByEmail(normalizedEmail);
+    if (!user) {
+      return { ok: false, reason: 'INVALID_CREDENTIALS' };
+    }
+
+    const isValid = await this.passwordHasher.verify(password, user.passwordHash);
+    if (!isValid) {
+      user.failedAttempts += 1;
+      await this.userRepository.save(user);
+      return { ok: false, reason: 'INVALID_CREDENTIALS' };
+    }
+
+    user.failedAttempts = 0;
+    user.lockedUntil = null;
+    await this.userRepository.save(user);
+
+    return { ok: true, userId: user.id };
   }
 }
