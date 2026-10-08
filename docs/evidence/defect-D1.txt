@@ -1,0 +1,29 @@
+
+ RUN  v2.1.9 /home/erico/Documents/suficiencia/certificacao-testes
+
+ ❯ tests/password-policy.test.ts (16 tests | 1 failed) 39ms
+   × validatePassword > RN01 — password length (8–64 characters) > CT-02: accepts password with exactly 8 characters (RN01, lower boundary) 11ms
+     → expected [ 'TOO_SHORT' ] to not include 'TOO_SHORT'
+ ✓ tests/auth-service.test.ts (12 tests) 27ms
+ ✓ tests/infrastructure.test.ts (3 tests) 60ms
+ ✓ tests/integration.test.ts (3 tests) 534ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/password-policy.test.ts > validatePassword > RN01 — password length (8–64 characters) > CT-02: accepts password with exactly 8 characters (RN01, lower boundary)
+AssertionError: expected [ 'TOO_SHORT' ] to not include 'TOO_SHORT'
+ ❯ tests/password-policy.test.ts:18:26
+     16|       // 8 chars = "Aa1!xyzw"
+     17|       const result = validatePassword('Aa1!xyzw', VALID_EMAIL);
+     18|       expect(result).not.toContain('TOO_SHORT');
+       |                          ^
+     19|     });
+     20| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 33 passed (34)
+   Start at  21:35:20
+   Duration  1.28s (transform 291ms, setup 0ms, collect 487ms, tests 659ms, environment 1ms, prepare 491ms)
+

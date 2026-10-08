@@ -1,0 +1,70 @@
+
+ RUN  v2.1.9 /home/erico/Documents/suficiencia/certificacao-testes
+
+ ✓ tests/password-policy.test.ts (16 tests) 16ms
+ ❯ tests/auth-service.test.ts (12 tests | 1 failed) 52ms
+   × AuthService — register > RN06 — login authentication > CT-20: returns success and resets failedAttempts on correct password (RN06) 24ms
+     → expected "spy" to be called with arguments: [ ObjectContaining{…} ]
+
+Received: 
+
+  1st spy call:
+
+  Array [
+-   ObjectContaining {
+-     "failedAttempts": 0,
++   Object {
++     "email": "user@example.com",
++     "failedAttempts": 2,
+      "id": "u-1",
++     "lockedUntil": null,
++     "passwordHash": "hashed_pw",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ✓ tests/infrastructure.test.ts (3 tests) 69ms
+ ✓ tests/integration.test.ts (3 tests) 772ms
+   ✓ Integration — AuthService with real InMemoryUserRepository and ScryptPasswordHasher > locks account after 3 consecutive failures and unlocks after 15 minutes 386ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/auth-service.test.ts > AuthService — register > RN06 — login authentication > CT-20: returns success and resets failedAttempts on correct password (RN06)
+AssertionError: expected "spy" to be called with arguments: [ ObjectContaining{…} ]
+
+Received: 
+
+  1st spy call:
+
+  Array [
+-   ObjectContaining {
+-     "failedAttempts": 0,
++   Object {
++     "email": "user@example.com",
++     "failedAttempts": 2,
+      "id": "u-1",
++     "lockedUntil": null,
++     "passwordHash": "hashed_pw",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/auth-service.test.ts:165:35
+    163|         userId: 'u-1',
+    164|       });
+    165|       expect(userRepository.save).toHaveBeenCalledWith(
+       |                                   ^
+    166|         expect.objectContaining({
+    167|           id: 'u-1',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 33 passed (34)
+   Start at  21:36:06
+   Duration  1.46s (transform 339ms, setup 0ms, collect 573ms, tests 909ms, environment 2ms, prepare 558ms)
+
