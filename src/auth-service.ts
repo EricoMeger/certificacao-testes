@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { PasswordViolation, validatePassword } from './password-policy.js';
 import { User, UserRepository, PasswordHasher, Clock } from './ports.js';
 import { isValidEmail, normalizeEmail } from './email.js';
+import { MAX_FAILED_ATTEMPTS, LOCK_MINUTES } from './config.js';
 
 export type RegisterResult =
   | { ok: true; userId: string }
@@ -63,9 +64,22 @@ export class AuthService {
       return { ok: false, reason: 'INVALID_CREDENTIALS' };
     }
 
+    const now = this.clock.now();
+
+    if (user.lockedUntil !== null) {
+      if (now.getTime() < user.lockedUntil.getTime()) {
+        return { ok: false, reason: 'ACCOUNT_LOCKED' };
+      }
+      user.lockedUntil = null;
+      user.failedAttempts = 0;
+    }
+
     const isValid = await this.passwordHasher.verify(password, user.passwordHash);
     if (!isValid) {
       user.failedAttempts += 1;
+      if (user.failedAttempts >= MAX_FAILED_ATTEMPTS) {
+        user.lockedUntil = new Date(now.getTime() + LOCK_MINUTES * 60 * 1000);
+      }
       await this.userRepository.save(user);
       return { ok: false, reason: 'INVALID_CREDENTIALS' };
     }
