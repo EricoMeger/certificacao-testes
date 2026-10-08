@@ -1,0 +1,40 @@
+
+ RUN  v2.1.9 /home/erico/Documents/suficiencia/certificacao-testes
+
+ ❯ tests/password-policy.test.ts (15 tests | 2 failed) 20ms
+   × validatePassword > RN03 — password cannot contain local part of email (case-insensitive) > CT-10: rejects password containing exact local part of email (RN03) 8ms
+     → expected [] to include 'CONTAINS_EMAIL_LOCAL_PART'
+   × validatePassword > RN03 — password cannot contain local part of email (case-insensitive) > CT-11: rejects password containing uppercase local part of email (RN03, case-insensitive) 1ms
+     → expected [] to include 'CONTAINS_EMAIL_LOCAL_PART'
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/password-policy.test.ts > validatePassword > RN03 — password cannot contain local part of email (case-insensitive) > CT-10: rejects password containing exact local part of email (RN03)
+AssertionError: expected [] to include 'CONTAINS_EMAIL_LOCAL_PART'
+ ❯ tests/password-policy.test.ts:78:22
+     76|     it('CT-10: rejects password containing exact local part of email (…
+     77|       const result = validatePassword('Pass!user123', 'user@example.co…
+     78|       expect(result).toContain('CONTAINS_EMAIL_LOCAL_PART');
+       |                      ^
+     79|     });
+     80| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/password-policy.test.ts > validatePassword > RN03 — password cannot contain local part of email (case-insensitive) > CT-11: rejects password containing uppercase local part of email (RN03, case-insensitive)
+AssertionError: expected [] to include 'CONTAINS_EMAIL_LOCAL_PART'
+ ❯ tests/password-policy.test.ts:83:22
+     81|     it('CT-11: rejects password containing uppercase local part of ema…
+     82|       const result = validatePassword('Pass!USER123', 'user@example.co…
+     83|       expect(result).toContain('CONTAINS_EMAIL_LOCAL_PART');
+       |                      ^
+     84|     });
+     85| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 13 passed (15)
+   Start at  21:23:29
+   Duration  486ms (transform 62ms, setup 0ms, collect 71ms, tests 20ms, environment 0ms, prepare 85ms)
+

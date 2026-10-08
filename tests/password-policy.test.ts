@@ -71,4 +71,21 @@ describe('validatePassword', () => {
       expect(result).not.toContain('MISSING_LOWERCASE');
     });
   });
+
+  describe('RN03 — password cannot contain local part of email (case-insensitive)', () => {
+    it('CT-10: rejects password containing exact local part of email (RN03)', () => {
+      const result = validatePassword('Pass!user123', 'user@example.com');
+      expect(result).toContain('CONTAINS_EMAIL_LOCAL_PART');
+    });
+
+    it('CT-11: rejects password containing uppercase local part of email (RN03, case-insensitive)', () => {
+      const result = validatePassword('Pass!USER123', 'user@example.com');
+      expect(result).toContain('CONTAINS_EMAIL_LOCAL_PART');
+    });
+
+    it('CT-12: accepts password when email local part is not contained (RN03)', () => {
+      const result = validatePassword('SecurePass1!', 'user@example.com');
+      expect(result).not.toContain('CONTAINS_EMAIL_LOCAL_PART');
+    });
+  });
 });
