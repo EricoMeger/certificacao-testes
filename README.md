@@ -145,7 +145,3 @@ npm test
 ```
 
 A suíte cobre regras de negócio, infraestrutura, integração e o contrato HTTP da API.
-
-## Autor
-
-João da Silva — IFPR Campus Pinhais
