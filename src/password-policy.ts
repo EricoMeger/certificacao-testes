@@ -23,7 +23,7 @@ const COMPLEXITY_RULES: ReadonlyArray<{
 /** Returns all violations found; an empty array means the password is valid. */
 export function validatePassword(
   password: string,
-  _email: string,
+  email: string,
 ): PasswordViolation[] {
   const violations: PasswordViolation[] = [];
 
@@ -39,6 +39,13 @@ export function validatePassword(
     if (!pattern.test(password)) {
       violations.push(violation);
     }
+  }
+
+  // RN03 — email local part check
+  const atIndex = email.indexOf('@');
+  const localPart = atIndex !== -1 ? email.slice(0, atIndex) : email;
+  if (localPart.length > 0 && password.toLowerCase().includes(localPart.toLowerCase())) {
+    violations.push('CONTAINS_EMAIL_LOCAL_PART');
   }
 
   return violations;
