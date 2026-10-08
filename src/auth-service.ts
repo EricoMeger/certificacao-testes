@@ -40,18 +40,20 @@ export class AuthService {
     }
 
     const passwordHash = await this.passwordHasher.hash(password);
-    const userId = randomUUID();
-    const user: User = {
-      id: userId,
-      email: normalizedEmail,
+    const user = this.createUser(normalizedEmail, passwordHash);
+    await this.userRepository.save(user);
+
+    return { ok: true, userId: user.id };
+  }
+
+  private createUser(email: string, passwordHash: string): User {
+    return {
+      id: randomUUID(),
+      email,
       passwordHash,
       failedAttempts: 0,
       lockedUntil: null,
     };
-
-    await this.userRepository.save(user);
-
-    return { ok: true, userId };
   }
 
   async login(_email: string, _password: string): Promise<LoginResult> {
