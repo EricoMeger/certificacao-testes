@@ -22,5 +22,24 @@ describe('validatePassword', () => {
       const result = validatePassword('Aa1!xyzwk', VALID_EMAIL);
       expect(result).not.toContain('TOO_SHORT');
     });
+
+    it('CT-04: accepts password with 63 characters (RN01, upper boundary - 1)', () => {
+      // 63-char password: "Aa1!" + 59 lowercase letters
+      const password = 'Aa1!' + 'b'.repeat(59);
+      const result = validatePassword(password, VALID_EMAIL);
+      expect(result).not.toContain('TOO_LONG');
+    });
+
+    it('CT-05: accepts password with exactly 64 characters (RN01, upper boundary)', () => {
+      const password = 'Aa1!' + 'b'.repeat(60);
+      const result = validatePassword(password, VALID_EMAIL);
+      expect(result).not.toContain('TOO_LONG');
+    });
+
+    it('CT-06: rejects password with 65 characters (RN01, upper boundary + 1)', () => {
+      const password = 'Aa1!' + 'b'.repeat(61);
+      const result = validatePassword(password, VALID_EMAIL);
+      expect(result).toContain('TOO_LONG');
+    });
   });
 });

@@ -1,0 +1,26 @@
+
+ RUN  v2.1.9 /home/erico/Documents/suficiencia/certificacao-testes
+
+ ❯ tests/password-policy.test.ts (6 tests | 1 failed) 13ms
+   × validatePassword > RN01 — password length (8–64 characters) > CT-06: rejects password with 65 characters (RN01, upper boundary + 1) 8ms
+     → expected [] to include 'TOO_LONG'
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/password-policy.test.ts > validatePassword > RN01 — password length (8–64 characters) > CT-06: rejects password with 65 characters (RN01, upper boundary + 1)
+AssertionError: expected [] to include 'TOO_LONG'
+ ❯ tests/password-policy.test.ts:42:22
+     40|       const password = 'Aa1!' + 'b'.repeat(61);
+     41|       const result = validatePassword(password, VALID_EMAIL);
+     42|       expect(result).toContain('TOO_LONG');
+       |                      ^
+     43|     });
+     44|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  21:10:56
+   Duration  425ms (transform 53ms, setup 0ms, collect 47ms, tests 13ms, environment 0ms, prepare 93ms)
+
