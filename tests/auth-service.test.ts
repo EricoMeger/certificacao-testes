@@ -169,5 +169,123 @@ describe('AuthService — register', () => {
         }),
       );
     });
+
+    it('CT-21: triggers 15-minute lock on 3rd consecutive failed attempt (RN06, boundary 3)', async () => {
+      const lockStartTime = new Date('2026-10-08T10:00:00.000Z');
+      vi.mocked(clock.now).mockReturnValue(lockStartTime);
+
+      const existingUser = {
+        id: 'u-1',
+        email: 'user@example.com',
+        passwordHash: 'hashed_pw',
+        failedAttempts: 2,
+        lockedUntil: null,
+      };
+      vi.mocked(userRepository.findByEmail).mockResolvedValueOnce(existingUser);
+      vi.mocked(passwordHasher.verify).mockResolvedValueOnce(false);
+
+      const result = await authService.login('user@example.com', 'WrongPass1!');
+
+      // The 3rd failure still returns INVALID_CREDENTIALS
+      expect(result).toEqual({
+        ok: false,
+        reason: 'INVALID_CREDENTIALS',
+      });
+
+      const expectedLock = new Date('2026-10-08T10:15:00.000Z');
+      expect(userRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: 'u-1',
+          failedAttempts: 3,
+          lockedUntil: expectedLock,
+        }),
+      );
+    });
+
+    it('CT-22: returns ACCOUNT_LOCKED when account is currently locked, even with correct password (RN06, boundary 14:59)', async () => {
+      // Locked at 10:00:00, locked until 10:15:00. At 10:14:59 (14 min 59s), account is locked.
+      const lockedUntil = new Date('2026-10-08T10:15:00.000Z');
+      const testTime = new Date('2026-10-08T10:14:59.000Z');
+      vi.mocked(clock.now).mockReturnValue(testTime);
+
+      const existingUser = {
+        id: 'u-1',
+        email: 'user@example.com',
+        passwordHash: 'hashed_pw',
+        failedAttempts: 3,
+        lockedUntil,
+      };
+      vi.mocked(userRepository.findByEmail).mockResolvedValueOnce(existingUser);
+
+      const result = await authService.login('user@example.com', 'CorrectPass1!');
+
+      expect(result).toEqual({
+        ok: false,
+        reason: 'ACCOUNT_LOCKED',
+      });
+      expect(passwordHasher.verify).not.toHaveBeenCalled();
+      expect(userRepository.save).not.toHaveBeenCalled();
+    });
+
+    it('CT-23: unlocks account when lock duration has expired (now == lockedUntil) (RN06, boundary 15:00)', async () => {
+      // Exactly at lockedUntil (10:15:00), account is treated as unlocked
+      const lockedUntil = new Date('2026-10-08T10:15:00.000Z');
+      vi.mocked(clock.now).mockReturnValue(lockedUntil);
+
+      const existingUser = {
+        id: 'u-1',
+        email: 'user@example.com',
+        passwordHash: 'hashed_pw',
+        failedAttempts: 3,
+        lockedUntil,
+      };
+      vi.mocked(userRepository.findByEmail).mockResolvedValueOnce(existingUser);
+      vi.mocked(passwordHasher.verify).mockResolvedValueOnce(true);
+
+      const result = await authService.login('user@example.com', 'CorrectPass1!');
+
+      expect(result).toEqual({
+        ok: true,
+        userId: 'u-1',
+      });
+      expect(userRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: 'u-1',
+          failedAttempts: 0,
+          lockedUntil: null,
+        }),
+      );
+    });
+
+    it('CT-24: resets counter after lock expiry and handles wrong password cleanly (RN06, boundary 15:01)', async () => {
+      // At 10:15:01 (15m01s), lock has expired. Counter resets, and a wrong password increments it to 1.
+      const lockedUntil = new Date('2026-10-08T10:15:00.000Z');
+      const testTime = new Date('2026-10-08T10:15:01.000Z');
+      vi.mocked(clock.now).mockReturnValue(testTime);
+
+      const existingUser = {
+        id: 'u-1',
+        email: 'user@example.com',
+        passwordHash: 'hashed_pw',
+        failedAttempts: 3,
+        lockedUntil,
+      };
+      vi.mocked(userRepository.findByEmail).mockResolvedValueOnce(existingUser);
+      vi.mocked(passwordHasher.verify).mockResolvedValueOnce(false);
+
+      const result = await authService.login('user@example.com', 'WrongPass1!');
+
+      expect(result).toEqual({
+        ok: false,
+        reason: 'INVALID_CREDENTIALS',
+      });
+      expect(userRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: 'u-1',
+          failedAttempts: 1,
+          lockedUntil: null,
+        }),
+      );
+    });
   });
 });
