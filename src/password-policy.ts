@@ -1,6 +1,6 @@
 // Skeleton — will be implemented via TDD.
 
-import { MIN_LENGTH } from './config.js';
+import { MIN_LENGTH, MAX_LENGTH } from './config.js';
 
 export type PasswordViolation =
   | 'TOO_SHORT'
@@ -20,9 +20,7 @@ export function validatePassword(
 
   if (password.length < MIN_LENGTH) {
     violations.push('TOO_SHORT');
-  }
-
-  if (password.length > 64) {
+  } else if (password.length > MAX_LENGTH) {
     violations.push('TOO_LONG');
   }
 
