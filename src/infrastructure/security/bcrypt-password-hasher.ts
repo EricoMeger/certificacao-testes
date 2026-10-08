@@ -14,6 +14,3 @@ export class BcryptPasswordHasher implements PasswordHasher {
     return bcrypt.compare(plain, hash);
   }
 }
-
-export type ScryptPasswordHasher = BcryptPasswordHasher;
-export const ScryptPasswordHasher = BcryptPasswordHasher;
