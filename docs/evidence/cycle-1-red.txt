@@ -1,0 +1,26 @@
+
+ RUN  v2.1.9 /home/erico/Documents/suficiencia/certificacao-testes
+
+ ❯ tests/password-policy.test.ts (3 tests | 1 failed) 11ms
+   × validatePassword > RN01 — password length (8–64 characters) > CT-01: rejects password with 7 characters (RN01, lower boundary - 1) 9ms
+     → expected [] to include 'TOO_SHORT'
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/password-policy.test.ts > validatePassword > RN01 — password length (8–64 characters) > CT-01: rejects password with 7 characters (RN01, lower boundary - 1)
+AssertionError: expected [] to include 'TOO_SHORT'
+ ❯ tests/password-policy.test.ts:12:22
+     10|       // 7 chars = "Aa1!xyz" — meets all other rules but is too short
+     11|       const result = validatePassword('Aa1!xyz', VALID_EMAIL);
+     12|       expect(result).toContain('TOO_SHORT');
+       |                      ^
+     13|     });
+     14| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  21:09:19
+   Duration  441ms (transform 57ms, setup 0ms, collect 39ms, tests 11ms, environment 0ms, prepare 101ms)
+
