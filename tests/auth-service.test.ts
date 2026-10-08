@@ -106,4 +106,68 @@ describe('AuthService — register', () => {
       );
     });
   });
+
+  describe('RN06 — login authentication', () => {
+    it('CT-18: returns INVALID_CREDENTIALS when user does not exist (RN06, anti-enumeration)', async () => {
+      vi.mocked(userRepository.findByEmail).mockResolvedValueOnce(null);
+
+      const result = await authService.login('unknown@example.com', 'AnyPass1!');
+
+      expect(result).toEqual({
+        ok: false,
+        reason: 'INVALID_CREDENTIALS',
+      });
+      expect(passwordHasher.verify).not.toHaveBeenCalled();
+    });
+
+    it('CT-19: returns INVALID_CREDENTIALS and increments failedAttempts on incorrect password (RN06)', async () => {
+      const existingUser = {
+        id: 'u-1',
+        email: 'user@example.com',
+        passwordHash: 'hashed_pw',
+        failedAttempts: 0,
+        lockedUntil: null,
+      };
+      vi.mocked(userRepository.findByEmail).mockResolvedValueOnce(existingUser);
+      vi.mocked(passwordHasher.verify).mockResolvedValueOnce(false);
+
+      const result = await authService.login('user@example.com', 'WrongPass1!');
+
+      expect(result).toEqual({
+        ok: false,
+        reason: 'INVALID_CREDENTIALS',
+      });
+      expect(userRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: 'u-1',
+          failedAttempts: 1,
+        }),
+      );
+    });
+
+    it('CT-20: returns success and resets failedAttempts on correct password (RN06)', async () => {
+      const existingUser = {
+        id: 'u-1',
+        email: 'user@example.com',
+        passwordHash: 'hashed_pw',
+        failedAttempts: 2,
+        lockedUntil: null,
+      };
+      vi.mocked(userRepository.findByEmail).mockResolvedValueOnce(existingUser);
+      vi.mocked(passwordHasher.verify).mockResolvedValueOnce(true);
+
+      const result = await authService.login('user@example.com', 'CorrectPass1!');
+
+      expect(result).toEqual({
+        ok: true,
+        userId: 'u-1',
+      });
+      expect(userRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: 'u-1',
+          failedAttempts: 0,
+        }),
+      );
+    });
+  });
 });
