@@ -1,0 +1,66 @@
+
+ RUN  v2.1.9 /home/erico/Documents/suficiencia/certificacao-testes
+
+ ✓ tests/password-policy.test.ts (15 tests) 9ms
+ ❯ tests/auth-service.test.ts (2 tests | 2 failed) 22ms
+   × AuthService — register > RN04 & RN01-RN03 — registration validation > CT-13: rejects invalid email format on registration (RN04) 17ms
+     → expected { ok: true, userId: 'naive-id' } to deeply equal { ok: false, reason: 'INVALID_EMAIL' }
+   × AuthService — register > RN04 & RN01-RN03 — registration validation > CT-14: rejects weak password on registration and does not hash or save (RN01-RN03, RN05) 4ms
+     → expected { ok: true, userId: 'naive-id' } to deeply equal { ok: false, …(2) }
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/auth-service.test.ts > AuthService — register > RN04 & RN01-RN03 — registration validation > CT-13: rejects invalid email format on registration (RN04)
+AssertionError: expected { ok: true, userId: 'naive-id' } to deeply equal { ok: false, reason: 'INVALID_EMAIL' }
+
+- Expected
++ Received
+
+  Object {
+-   "ok": false,
+-   "reason": "INVALID_EMAIL",
++   "ok": true,
++   "userId": "naive-id",
+  }
+
+ ❯ tests/auth-service.test.ts:32:22
+     30|       const result = await authService.register('invalid-email', 'Stro…
+     31| 
+     32|       expect(result).toEqual({
+       |                      ^
+     33|         ok: false,
+     34|         reason: 'INVALID_EMAIL',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/auth-service.test.ts > AuthService — register > RN04 & RN01-RN03 — registration validation > CT-14: rejects weak password on registration and does not hash or save (RN01-RN03, RN05)
+AssertionError: expected { ok: true, userId: 'naive-id' } to deeply equal { ok: false, …(2) }
+
+- Expected
++ Received
+
+  Object {
+-   "ok": false,
+-   "reason": "WEAK_PASSWORD",
+-   "violations": ArrayContaining [
+-     "TOO_SHORT",
+-   ],
++   "ok": true,
++   "userId": "naive-id",
+  }
+
+ ❯ tests/auth-service.test.ts:43:22
+     41|       const result = await authService.register('user@example.com', 's…
+     42| 
+     43|       expect(result).toEqual({
+       |                      ^
+     44|         ok: false,
+     45|         reason: 'WEAK_PASSWORD',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 15 passed (17)
+   Start at  21:25:36
+   Duration  538ms (transform 131ms, setup 0ms, collect 194ms, tests 31ms, environment 1ms, prepare 192ms)
+
