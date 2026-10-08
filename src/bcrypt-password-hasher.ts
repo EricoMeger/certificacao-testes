@@ -1,2 +1,5 @@
-export { BcryptPasswordHasher, ScryptPasswordHasher } from './scrypt-password-hasher.js';
+export {
+  BcryptPasswordHasher,
+  ScryptPasswordHasher,
+} from './infrastructure/security/bcrypt-password-hasher.js';
 
