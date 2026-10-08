@@ -4,6 +4,8 @@
   "type": "module",
   "description": "Módulo TypeScript puro para cadastro e autenticação de usuários com política de senha, bloqueio por tentativas e hash seguro (scrypt).",
   "scripts": {
+    "dev": "tsx watch server.ts",
+    "start": "tsx server.ts",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit"
@@ -13,12 +15,15 @@
   "license": "ISC",
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.0",
     "@types/node": "^26.6.4",
     "@vitest/coverage-istanbul": "^2.1.9",
+    "tsx": "^4.20.4",
     "typescript": "^7.0.2",
     "vitest": "^2.1.9"
   },
   "dependencies": {
-    "bcrypt": "^6.0.0"
+    "bcrypt": "^6.0.0",
+    "express": "^5.1.0"
   }
 }
