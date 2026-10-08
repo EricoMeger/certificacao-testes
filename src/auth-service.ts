@@ -1,6 +1,6 @@
 import { PasswordViolation, validatePassword } from './password-policy.js';
 import { UserRepository, PasswordHasher, Clock } from './ports.js';
-import { isValidEmail } from './email.js';
+import { isValidEmail, normalizeEmail } from './email.js';
 
 export type RegisterResult =
   | { ok: true; userId: string }
@@ -22,11 +22,13 @@ export class AuthService {
   ) {}
 
   async register(email: string, password: string): Promise<RegisterResult> {
-    if (!isValidEmail(email)) {
+    const normalizedEmail = normalizeEmail(email);
+
+    if (!isValidEmail(normalizedEmail)) {
       return { ok: false, reason: 'INVALID_EMAIL' };
     }
 
-    const violations = validatePassword(password, email);
+    const violations = validatePassword(password, normalizedEmail);
     if (violations.length > 0) {
       return { ok: false, reason: 'WEAK_PASSWORD', violations };
     }
