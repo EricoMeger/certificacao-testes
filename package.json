@@ -1,0 +1,19 @@
+{
+  "name": "certificacao-testes",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Módulo TypeScript puro para cadastro e autenticação de usuários com política de senha, bloqueio por tentativas e hash seguro (scrypt).",
+  "scripts": {
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "João da Silva",
+  "license": "ISC",
+  "devDependencies": {
+    "@vitest/coverage-istanbul": "^2.1.9",
+    "typescript": "^7.0.2",
+    "vitest": "^2.1.9"
+  }
+}
